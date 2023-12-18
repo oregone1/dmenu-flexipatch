@@ -102,7 +102,7 @@ struct item {
 	#endif // PRINTINDEX_PATCH
 };
 
-static unsigned int columns    = 0;
+//static unsigned int columns    = 0;
 
 
 static char text[BUFSIZ] = "";
