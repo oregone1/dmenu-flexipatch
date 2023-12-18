@@ -1,6 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 /* Default settings; can be overriden by command line. */
-
+#define BARPADDING_PATCH 1
+#define XYW_PATCH 1
 static int topbar = 1;                      /* -b  option; if 0, dmenu appears at bottom */
 #if ALPHA_PATCH
 static int opacity = 1;                     /* -o  option; if 0, then alpha is disabled */
@@ -38,7 +39,7 @@ static char *fonts[] =
 static const char *fonts[] =
 #endif // XRESOURCES_PATCH
 {
-	"monospace:size=10"
+	"CozetteVector Nerd Font"
 };
 #endif // PANGO_PATCH
 #if MANAGED_PATCH
@@ -118,10 +119,10 @@ char *colors[][2] = {
 };
 /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
 static unsigned int lines      = 0;
-#if GRID_PATCH
+// #if GRID_PATCH
 /* -g option; if nonzero, dmenu uses a grid comprised of columns and lines */
 static unsigned int columns    = 0;
-#endif // GRID_PATCH
+// #endif // GRID_PATCH
 #if LINE_HEIGHT_PATCH
 static unsigned int lineheight = 0;         /* -h option; minimum height of a menu line     */
 static unsigned int min_lineheight = 8;

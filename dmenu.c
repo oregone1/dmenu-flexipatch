@@ -26,9 +26,11 @@
 
 #include "drw.h"
 #include "util.h"
-#if GRIDNAV_PATCH
+//#if GRIDNAV_PATCH
 #include <stdbool.h>
-#endif // GRIDNAV_PATCH
+//#endif // GRIDNAV_PATCH
+//
+#define XYW_PATCH 1
 
 /* macros */
 #define INTERSECT(x,y,w,h,r)  (MAX(0, MIN((x)+(w),(r).x_org+(r).width)  - MAX((x),(r).x_org)) \
@@ -99,6 +101,9 @@ struct item {
 	int index;
 	#endif // PRINTINDEX_PATCH
 };
+
+static unsigned int columns    = 0;
+
 
 static char text[BUFSIZ] = "";
 #if PIPEOUT_PATCH
@@ -237,14 +242,14 @@ calcoffsets(void)
 	int i, n, rpad = 0;
 
 	if (lines > 0) {
-		#if GRID_PATCH
+		//#if GRID_PATCH
 		if (columns)
 			n = lines * columns * bh;
 		else
 			n = lines * bh;
-		#else
-		n = lines * bh;
-		#endif // GRID_PATCH
+	//	#else
+	//	n = lines * bh;
+	//	#endif // GRID_PATCH
 	} else {
 		#if NUMBERS_PATCH
 		rpad = TEXTW(numbers);
@@ -607,7 +612,7 @@ drawmenu(void)
 	#endif // BORDER_PATCH
 	#endif // NUMBERS_PATCH
 	if (lines > 0) {
-		#if GRID_PATCH
+		//#if GRID_PATCH
 		/* draw grid */
 		int i = 0;
 		for (item = curr; item != next; item = item->right, i++)
@@ -633,15 +638,15 @@ drawmenu(void)
 				#else
 				drawitem(item, x, y += bh, mw - x);
 				#endif // VERTFULL_PATCH
-		#else
-		/* draw vertical list */
+		/*#else
+		/ draw vertical list /
 		for (item = curr; item != next; item = item->right)
 			#if VERTFULL_PATCH
 			drawitem(item, 0, y += bh, mw);
 			#else
 			drawitem(item, x, y += bh, mw - x);
 			#endif // VERTFULL_PATCH
-		#endif // GRID_PATCH
+		#endif // GRID_PATCH*/
 	} else if (matches) {
 		/* draw horizontal list */
 		x += inputw;
@@ -955,11 +960,11 @@ keypress(XKeyEvent *ev)
 	#endif // PREFIXCOMPLETION_PATCH
 	KeySym ksym = NoSymbol;
 	Status status;
-	#if GRID_PATCH && GRIDNAV_PATCH
+	//#if GRID_PATCH && GRIDNAV_PATCH
 	int i;
 	struct item *tmpsel;
 	bool offscreen = false;
-	#endif // GRIDNAV_PATCH
+	//#endif // GRIDNAV_PATCH
 
 	len = XmbLookupString(xic, ev, buf, sizeof buf, &ksym, &status);
 	switch (status) {
@@ -1160,7 +1165,7 @@ insert:
 		break;
 	case XK_Left:
 	case XK_KP_Left:
-		#if GRID_PATCH && GRIDNAV_PATCH
+		//#if GRID_PATCH && GRIDNAV_PATCH
 		if (columns > 1) {
 			if (!sel)
 				return;
@@ -1179,7 +1184,7 @@ insert:
 			}
 			break;
 		}
-		#endif // GRIDNAV_PATCH
+		//#endif // GRIDNAV_PATCH
 		if (cursor > 0 && (!sel || !sel->left || lines > 0)) {
 			cursor = nextrune(-1);
 			break;
@@ -1288,7 +1293,7 @@ insert:
 		break;
 	case XK_Right:
 	case XK_KP_Right:
-		#if GRID_PATCH && GRIDNAV_PATCH
+		//#if GRID_PATCH && GRIDNAV_PATCH
 		if (columns > 1) {
 			if (!sel)
 				return;
@@ -1307,7 +1312,7 @@ insert:
 			}
 			break;
 		}
-		#endif // GRIDNAV_PATCH
+		//#endif // GRIDNAV_PATCH
 		if (text[cursor] != '\0') {
 			cursor = nextrune(+1);
 			break;
@@ -1855,9 +1860,9 @@ usage(void)
 		#if MANAGED_PATCH
 		"[-wm] "
 		#endif // MANAGED_PATCH
-		#if GRID_PATCH
+		//#if GRID_PATCH
 		"[-g columns] "
-		#endif // GRID_PATCH
+		//#endif // GRID_PATCH
 		"[-l lines] [-p prompt] [-fn font] [-m monitor]"
 		"\n             [-nb color] [-nf color] [-sb color] [-sf color] [-w windowid]"
 		#if DYNAMIC_OPTIONS_PATCH || FZFEXPECT_PATCH || ALPHA_PATCH || BORDER_PATCH || HIGHPRIORITY_PATCH
@@ -2027,13 +2032,13 @@ main(int argc, char *argv[])
 		else if (!strcmp(argv[i], "-H"))
 			histfile = argv[++i];
 		#endif // NAVHISTORY_PATCH
-		#if GRID_PATCH
+		//#if GRID_PATCH
 		else if (!strcmp(argv[i], "-g")) {   /* number of columns in grid */
 			columns = atoi(argv[++i]);
 			if (columns && lines == 0)
 				lines = 1;
 		}
-		#endif // GRID_PATCH
+		//#endif // GRID_PATCH
 		else if (!strcmp(argv[i], "-l"))   /* number of lines in vertical list */
 			lines = atoi(argv[++i]);
 		#if XYW_PATCH
